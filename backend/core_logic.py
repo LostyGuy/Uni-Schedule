@@ -4,8 +4,8 @@ from fastapi.responses import JSONResponse, RedirectResponse
 import logging as log
 import hashlib
 
-from db import get_db
-import models
+from backend.db import get_db
+import backend.models
 
 
 def log_info(message) -> None:
