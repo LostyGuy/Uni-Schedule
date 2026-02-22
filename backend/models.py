@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey, base
+from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
 from backend.db import Base
 
@@ -34,8 +34,8 @@ class user_login_credentials(Base):
     )
     role: int = Column(
         Integer,
+        ForeignKey("role.id"),
         nullable= False,
-        ForeignKey= 'role.id',
     )
 
 class schedule(Base):
@@ -55,8 +55,8 @@ class schedule(Base):
     )
     created_by: int = Column(
         Integer,
+        ForeignKey("user_login_credentials.id"),
         nullable= False,
-        ForeignKey= 'user_login_credentials.id',
     )
     created_at: str = Column(
         TIMESTAMP,
@@ -94,8 +94,8 @@ class event(Base):
     )
     color: int = Column(
         Integer,
+        ForeignKey("color.id"),
         nullable= False,
-        ForeignKey= 'color.id',
     )
     location: str = Column(
         String,
@@ -107,8 +107,8 @@ class event(Base):
     )
     created_by: int = Column(
         Integer,
+        ForeignKey("user_login_credentials.id"),
         nullable= False,
-        ForeignKey= 'user_login_credentials.id',
     )
     created_at: str = Column(
         TIMESTAMP,
@@ -141,8 +141,8 @@ class event_exception(Base):
     )
     new_color: int = Column(
         Integer,
+        ForeignKey("color.id"),
         nullable= False,
-        ForeignKey= 'color.id',
     )
     new_location: str = Column(
         String,
@@ -154,14 +154,13 @@ class event_exception(Base):
     )
     created_by: int = Column(
         Integer,
+        ForeignKey("user_login_credentials.id"),
         nullable= False,
-        ForeignKey= 'user_login_credentials.id',
     )
     created_at: str = Column(
         TIMESTAMP,
         nullable= False,
     )
-
 
 class schedule_events(Base):
     __tablename__ = 'schedule_events'
@@ -173,13 +172,13 @@ class schedule_events(Base):
     )
     id_schedule: int = Column(
         Integer,
+        ForeignKey("schedule.id"),
         nullable= False,
-        ForeignKey= 'schedule.id',
     )
     id_event: int = Column(
         Integer,
+        ForeignKey("event.id"),
         nullable= False,
-        ForeignKey= 'event.id',
     )
     created_at: str = Column(
         TIMESTAMP,
@@ -196,18 +195,18 @@ class schedule_participants(Base):
     )
     id_schedule: int = Column(
         Integer,
+        ForeignKey("schedule.id"),
         nullable= False,
-        ForeignKey= 'schedule.id',
     )
     id_user: int = Column(
         Integer,
+        ForeignKey("user_login_credentials.id"),
         nullable= False,
-        ForeignKey= 'user_login_credentials.id',
     )
     role: str = Column(
         Integer,
+        ForeignKey("role.id"),
         nullable= False,
-        ForeignKey= 'role.id',
     )
     created_at: str = Column(
         TIMESTAMP,

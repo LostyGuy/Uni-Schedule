@@ -16,6 +16,12 @@ def log_info(message) -> None:
 app = FastAPI()
 
 
+#----For Web----
+@app.get("/", response_class=JSONResponse)
+async def user_login_request():
+    return {"Hello":"Hello Worls"}
+#----End For Web----
+
 @app.post("/login_request", response_class=JSONResponse)
 async def user_login_request():
     raise NotImplementedError

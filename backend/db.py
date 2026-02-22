@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-from private_logic.private_keys import DATABASE_URL
+from backend.private_logic.private_keys import DATABASE_URL
 
 engine = create_engine(DATABASE_URL)
 

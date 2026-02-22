@@ -1,11 +1,15 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
+from backend.db import Base
+
 DATABASE_URL = "postgresql://"
 
 Testengine = create_engine(DATABASE_URL)
-TestSessionLocal = sessionmaker(bind=Testengine, autoflush=False, autocommit = False)
+TestSessionLocal = sessionmaker(bind=Testengine, autoflush=False, autocommit=False)
 TestBase = declarative_base()
+
+Base.metadata.create_all(bind=Testengine)
 
 def get_db():
     Testdb = TestSessionLocal()
