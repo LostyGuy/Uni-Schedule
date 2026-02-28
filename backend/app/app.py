@@ -4,8 +4,8 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from backend.logging import log_info
 import hashlib
 
-from backend.database import get_db
-import backend.models
+from backend.database.database import get_db
+import backend.database.models
 
 
 app = FastAPI()

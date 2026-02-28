@@ -1,6 +1,7 @@
 # private logic and setup
 backend/private_logic/
 .venv
+logs.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

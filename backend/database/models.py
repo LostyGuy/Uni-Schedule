@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.database import Base
+from backend.database.database import Base
 
 class user_login_credentials(Base):
     __tablename__ = 'user_login_credentials'
@@ -9,8 +9,6 @@ class user_login_credentials(Base):
         primary_key= True,
         nullable= False,
         autoincrement= True,
-        unique= True,
-        default= '0',
     )
     email: str = Column(
         String,
@@ -44,7 +42,7 @@ class schedule(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     title: String = Column(
         String,
@@ -74,7 +72,7 @@ class event(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     title: str = Column(
         String,
@@ -121,7 +119,7 @@ class event_exception(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     new_title: str = Column(
         String,
@@ -168,7 +166,7 @@ class schedule_events(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     id_schedule: int = Column(
         Integer,
@@ -191,7 +189,7 @@ class schedule_participants(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     id_schedule: int = Column(
         Integer,
@@ -219,7 +217,7 @@ class color(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     name: str = Column(
         String,
@@ -236,7 +234,7 @@ class role(Base):
         Integer,
         primary_key= True,
         nullable= False,
-        unique= True,
+        autoincrement= True,
     )
     name: str = Column(
         String,

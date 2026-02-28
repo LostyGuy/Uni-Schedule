@@ -1,7 +1,7 @@
 import pytest
 from fastapi.testclient import TestClient
-import backend.app as app
-import backend.database as database
+import backend.app.app as app
+import backend.database.database as database
 import backend.testing.test_database as Testdb
 
 #!----Status Codes----
