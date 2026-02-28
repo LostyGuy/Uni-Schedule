@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.db import Base
+from backend.database import Base
 
 class user_login_credentials(Base):
     __tablename__ = 'user_login_credentials'

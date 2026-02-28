@@ -1,17 +1,12 @@
 from fastapi import FastAPI, HTTPException, Request, Response, Depends
 from fastapi.responses import JSONResponse, RedirectResponse
 
-import logging as log
+from backend.logging import log_info
 import hashlib
 
-from backend.db import get_db
+from backend.database import get_db
 import backend.models
 
-
-def log_info(message) -> None:
-    log.info(20*'-')
-    log.info(message)
-    log.info(20*'-')
 
 app = FastAPI()
 

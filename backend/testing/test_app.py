@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-import backend.core_logic as core_logic
-import backend.db as db
-import backend.testing.test_db as Testdb
+import backend.app as app
+import backend.database as database
+import backend.testing.test_database as Testdb
 
 #!----Status Codes----
 #   200 - OK
@@ -14,17 +14,27 @@ import backend.testing.test_db as Testdb
 #----Mock DB Setup----
 @pytest.fixture
 def Client():
-    core_logic.app.dependency_overrides[db.get_db] = Testdb.get_db
-    return TestClient(core_logic.app)
+    app.app.dependency_overrides[database.get_db] = Testdb.get_db
+    return TestClient(app.app)
 
 #----User Related----
 def test_user_login_request(Client):
-    result = Client.post("/login_request", json={})
+    result = Client.post("/login_request", json={
+        "username":"JohnDoe", 
+        "password":"JohnDoePass",
+        "email":"johndoe@mail.jd",
+        "policy_agreement": True,
+        })
 
     assert result.status_code == 200
-    assert "" in result.json()
-
-    raise NotImplementedError
+    list_of_variables: list[str] = (
+        "username",
+        "access_token",
+        "issued_at",
+        "valid_till",
+        )
+    for variable in list_of_variables:
+        assert variable in result.json()
 
 def test_user_register_request(Client):
     raise NotImplementedError
