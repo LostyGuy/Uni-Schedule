@@ -21,8 +21,8 @@ def Client():
 def test_user_login_request(Client):
     result = Client.post("/login_request", json={
         "username":"JohnDoe", 
-        "password":"JohnDoePass",
         "email":"johndoe@mail.jd",
+        "password":"JohnDoePass",
         "policy_agreement": True,
         })
 

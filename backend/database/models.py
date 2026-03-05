@@ -1,6 +1,7 @@
 from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
 from backend.database.database import Base
+from timestamps import current_time
 
 class user_login_credentials(Base):
     __tablename__ = 'user_login_credentials'
@@ -11,6 +12,10 @@ class user_login_credentials(Base):
         autoincrement= True,
     )
     email: str = Column(
+        String,
+        nullable= False,
+    )
+    username: str = Column(
         String,
         nullable= False,
     )
@@ -245,3 +250,49 @@ class role(Base):
         nullable= True,
     )
 
+class login_session(Base):
+    __tablename__ = 'login_session'
+    
+    id: int = Column(
+        Integer,
+        autoincrement= True,
+        nullable= False,
+        primary_key= True,
+        unique= True
+    )
+    user_id: int = Column(
+        Integer,
+        ForeignKey('user_login_credentials.id'),
+        nullable= False,
+        index= True,
+    )
+    access_token: str = Column(
+        String,
+        nullable= False,
+    )
+    issued_at: TIMESTAMP = Column(
+        TIMESTAMP,
+        nullable= False,
+    )
+    valid_till: str = Column(
+        String,
+        nullable= False,
+    )
+    issued_from_endpoint: str = Column(
+        String,
+        nullable= False,
+    )
+    valid_for_endpoint: str = Column(
+        String,
+        nullable= False,
+    )
+    status: str = Column(
+        String,
+        nullable= False,
+        default= 'Active',
+    )
+    created_at: TIMESTAMP = Column(
+        TIMESTAMP,
+        nullable= False,
+        default= current_time(),
+    )
