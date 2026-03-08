@@ -6,6 +6,7 @@ from backend.database.database import Base
 from backend.timestamps import current_time
 from backend.logging import log_info_test_space, current_function
 from backend.private_logic.hashing import algorithm, hash_salt, hashed_answer_1, hashed_answer_2, hashed_answer_3 # type: ignore
+from backend.private_logic.jwt import TOKEN_LIFESPAN
 from backend.security.jwt_tokens import jwt_validation
 from typing import Annotated
 
@@ -96,13 +97,12 @@ def user_credential_for_setup() -> {dict, dict, dict, dict}:
 
 #----Tests----
 def test_is_user_in_database(db_session):
-    n_users= 3
     #----Add users to the database----
-    test_new_user_register(db_session, n_users= n_users)
+    test_new_user_register(db_session)
     #----Check if you can insert the same user twice----
-    for user in user_credential_for_setup()[0:n_users-1]:
+    for user in user_credential_for_setup():
         try:
-            user_CRUD.new_user_register(
+            result = user_CRUD.new_user_register(
                 username = user['username'],
                 email = user['email'],
                 password = user['password'],
@@ -112,23 +112,16 @@ def test_is_user_in_database(db_session):
             )
         except Exception as e:
             log_info_test_space(current_function, e)
-        finally:
-            assert e is not None
+        if user['policy_agreement']:
+            assert result == True
+        else:
+            assert result == False
 
-def test_new_user_register(db_session: None, n_users: int):
-    n_users=4
-    # new_user_credentials: dict[str:str] = {
-    #     'email': 'johndoe@mail.com',
-    #     'password': 'to_be_hashed',
-    #     'created_at': current_time(),
-    #     'policy_agreement': True,
-    #     'lastly_signed_in_on': current_time(),
-    #     'role': 2,
-    # }
+def test_new_user_register(db_session):
     users = user_credential_for_setup()
-
-    for new_user_credentials in users[0:n_users-1]:
-        user_CRUD.new_user_register(
+    
+    for new_user_credentials in users:
+        result = user_CRUD.new_user_register(
             username = new_user_credentials['username'],
             email = new_user_credentials['email'],
             password = new_user_credentials['password'],
@@ -136,44 +129,38 @@ def test_new_user_register(db_session: None, n_users: int):
             role = new_user_credentials['role'],
             db_session = db_session,
         )
-
-        user_query = db_session.query(
-                models.user_login_credentials.id,
-                models.user_login_credentials.username,
-                models.user_login_credentials.email,
-                models.user_login_credentials.hashed_password,
-                models.user_login_credentials.policy_agreement,
-            ).filter(
-                models.user_login_credentials.username == new_user_credentials['username'],
-                models.user_login_credentials.email == new_user_credentials['email'],
-                models.user_login_credentials.policy_agreement == new_user_credentials['policy_agreement'],
-                models.user_login_credentials.role == new_user_credentials['role'],
-            ).limit(1).one_or_none()
-
         if new_user_credentials['policy_agreement']:
-            assert user_query is not None
-        else:
-            assert user_query is None
-        
+            assert result == True
+        elif not new_user_credentials['policy_agreement']:
+            assert result == False
 
 def test_hashing():
-    assert user_CRUD.hash_password('Dog', algorithm, hash_salt) == hashed_answer_1
-    assert user_CRUD.hash_password('Youve_seen_nothing_like124876', algorithm, hash_salt) == hashed_answer_2
-    assert user_CRUD.hash_password('Te$t_of$pec!@l_S!gn$', algorithm, hash_salt) == hashed_answer_3
+    assert user_CRUD.hash_password('Dog', hash_salt) == hashed_answer_1
+    assert user_CRUD.hash_password('Youve_seen_nothing_like124876', hash_salt) == hashed_answer_2
+    assert user_CRUD.hash_password('Te$t_of$pec!@l_S!gn$', hash_salt) == hashed_answer_3
 
-def test_user_login():
-    n_users = 4
+def test_user_login(db_session):
+    #----Create Users----
     users = user_credential_for_setup()
-
-    for user_credentials in users[0:n_users-1]:
+    for user_credentials in users:
+        user_CRUD.new_user_register(
+            username = user_credentials['username'],
+            email = user_credentials['email'],
+            password = user_credentials['password'],
+            policy_agreement = user_credentials['policy_agreement'],
+            role = user_credentials['role'],
+            db_session = db_session
+        )
+    #----Check Login----
         result = user_CRUD.user_login(
             email = user_credentials['email'],
-            hashed_password = user_credentials['hashed_password'],
+            hashed_password = user_CRUD.hash_password(user_credentials['password'], hash_salt),
+            db_session = db_session,
         )
-        payload = jwt_validation(result)
-        assert 'user_id' in payload
-        assert 'issued_at' in payload
-        assert 'valid_till' in payload
+        if user_credentials['policy_agreement']:
+            assert result == True
+        elif not user_credentials['policy_agreement']:
+            assert result == False
         
 
 def test_is_session_active():

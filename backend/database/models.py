@@ -291,6 +291,10 @@ class login_session(Base):
         nullable= False,
         default= 'Active',
     )
+    jwt_id: str = Column(
+        String,
+        nullable= False,
+    )
     created_at: TIMESTAMP = Column(
         TIMESTAMP,
         nullable= False,

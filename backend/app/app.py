@@ -29,38 +29,38 @@ async def user_login_approval():
 async def user_register_request():
     raise NotImplementedError
 
-@app.post("/logout_request", response_class=JSONResponse)
+@app.post("/loged/logout_request", response_class=JSONResponse)
 async def logout_request():
     raise NotImplementedError
 
-@app.get("/user_profile", response_class=JSONResponse)
+@app.get("/loged/user_profile", response_class=JSONResponse)
 async def get_user_data():
     raise NotImplementedError
 
-@app.put("/calendar_update_request", response_class=JSONResponse)
+@app.put("/loged/calendar_update_request", response_class=JSONResponse)
 async def changes_to_calendar():
     raise NotImplementedError
 
-@app.get("/calendar_update_retrival", response_class=JSONResponse)
+@app.get("/loged/calendar_update_retrival", response_class=JSONResponse)
 async def changes_from_calendars():
     raise NotImplementedError
 
-@app.get("/weekly_schedule", response_class=JSONResponse)
+@app.get("/loged/weekly_schedule", response_class=JSONResponse)
 async def weekly_schedule():
     raise NotImplementedError
 
-@app.post("/qr_code_request", response_class=JSONResponse)
+@app.post("/loged/qr_code_request", response_class=JSONResponse)
 async def qr_code_request():
     raise NotImplementedError
 
-@app.get("/create_and_send_qr_code", response_class=JSONResponse)
+@app.get("/loged/create_and_send_qr_code", response_class=JSONResponse)
 async def creation_of_qr():
     raise NotImplementedError
 
-@app.post("/add_to_group_request", response_class=JSONResponse)
+@app.post("/loged/add_to_group_request", response_class=JSONResponse)
 async def add_to_calendar_request():
     raise NotImplementedError
 
-@app.get("/send_push_notification", response_class=JSONResponse)
+@app.get("/loged/send_push_notification", response_class=JSONResponse)
 async def send_notification():
     raise NotImplementedError

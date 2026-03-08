@@ -5,6 +5,7 @@ log.basicConfig(
     filename="logs.txt",
     filemode='a',
     level=log.INFO,
+    force=True,
 )
 
 def log_info(*message) -> None:
