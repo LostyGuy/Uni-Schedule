@@ -34,7 +34,7 @@ def db_session():
     finally:
         session.close()
 
-@pytest.fixture
+
 def role_for_setup() -> list[dict]:
     admin_role = models.role(
         name = 'owner',
@@ -46,7 +46,7 @@ def role_for_setup() -> list[dict]:
     )
     return admin_role, user_role
         
-@pytest.fixture
+
 def user_credential_for_setup() -> list[dict]:
     """Arguments in users: 
         username, 
@@ -99,7 +99,7 @@ def user_credential_for_setup() -> list[dict]:
 #----Tests----
 def test_is_user_in_database(db_session):
     #----Add users to the database----
-    test_new_user_register(db_session)
+    test_new_user_register(db_session)1x
     #----Check if you can insert the same user twice----
     for user in user_credential_for_setup():
         try:
