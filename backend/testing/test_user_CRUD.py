@@ -34,7 +34,8 @@ def db_session():
     finally:
         session.close()
 
-def role_for_setup() -> {dict, dict}:
+@pytest.fixture
+def role_for_setup() -> list[dict]:
     admin_role = models.role(
         name = 'owner',
         description = 'none',
@@ -45,8 +46,8 @@ def role_for_setup() -> {dict, dict}:
     )
     return admin_role, user_role
         
-
-def user_credential_for_setup() -> {dict, dict, dict, dict}:
+@pytest.fixture
+def user_credential_for_setup() -> list[dict]:
     """Arguments in users: 
         username, 
         email, 
@@ -161,10 +162,6 @@ def test_user_login(db_session):
             assert result == True
         elif not user_credentials['policy_agreement']:
             assert result == False
-        
-
-def test_is_session_active():
-    raise NotImplementedError
 
 def test_user_logout():
     raise NotImplementedError
