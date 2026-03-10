@@ -99,7 +99,7 @@ def user_credential_for_setup() -> list[dict]:
 #----Tests----
 def test_is_user_in_database(db_session):
     #----Add users to the database----
-    test_new_user_register(db_session)1x
+    test_new_user_register(db_session)
     #----Check if you can insert the same user twice----
     for user in user_credential_for_setup():
         try:
