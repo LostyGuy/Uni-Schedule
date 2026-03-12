@@ -81,6 +81,13 @@
 
 <hr>
 
+<div align='center' class='visual_concept'>
+    <h2>Visual Concept</h2>
+    <img src="readme_files/main_page.png" alt="main_page" width="100%" style="margin: auto;">
+</div>
+
+<hr>
+
 <div align='center' class='security'>
     <h2>What Security Measures Were Taken</h2>
     <h4>Anti-DDoS detection system</h4>
