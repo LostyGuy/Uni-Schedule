@@ -106,11 +106,12 @@
     <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of operations made during tests stays on database.</p>
 </div>
 
-<!-- <hr>
+<hr>
 
-<div align='center' class='techstack'>
-    <h2>Tech Stack</h2>
-</div> -->
+<div align='center' class='solved_problems'>
+    <h2>Challenges and Solutions</h2>
+    <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. I'll explain what when wrong, why and how I managed to find a solution</h4>
+</div>
 
 <hr>
 

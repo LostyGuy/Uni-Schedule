@@ -1,11 +1,11 @@
 from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
 from backend.database.database import Base
-from timestamps import current_time
+from backend.timestamps import current_time
 
 class user_login_credentials(Base):
     __tablename__ = 'user_login_credentials'
-    id: int = Column(
+    id_user: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
@@ -37,7 +37,7 @@ class user_login_credentials(Base):
     )
     role: int = Column(
         Integer,
-        ForeignKey("role.id"),
+        ForeignKey("role.role_id"),
         nullable= False,
     )
 
@@ -208,7 +208,7 @@ class schedule_participants(Base):
     )
     role: str = Column(
         Integer,
-        ForeignKey("role.id"),
+        ForeignKey("role.role_id"),
         nullable= False,
     )
     created_at: str = Column(
@@ -235,7 +235,7 @@ class color(Base):
 
 class role(Base):
     __tablename__ = 'role'
-    id: int = Column(
+    role_id: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
@@ -262,7 +262,7 @@ class login_session(Base):
     )
     user_id: int = Column(
         Integer,
-        ForeignKey('user_login_credentials.id'),
+        ForeignKey('user_login_credentials.id_user'),
         nullable= False,
         index= True,
     )

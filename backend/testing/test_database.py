@@ -1,9 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-DATABASE_URL = "postgresql://postgres:1234@localhost:5432/postgres"
+from backend.private_logic.database_url import TEST_DATABASE_URL
 
-Testengine = create_engine(DATABASE_URL)
+Testengine = create_engine(TEST_DATABASE_URL)
 TestSessionLocal = sessionmaker(bind=Testengine, autoflush=False, autocommit=False)
 
 def get_db():

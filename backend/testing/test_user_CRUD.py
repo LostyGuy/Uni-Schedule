@@ -1,53 +1,56 @@
 import pytest
 import backend.app.user_related.user_CRUD as user_CRUD
 import backend.database.models as models
-from backend.testing.test_database import Testengine, TestSessionLocal
 from backend.database.database import Base
 from backend.timestamps import current_time
 from backend.logging import log_info_test_space, current_function
+# from backend.database.database import SessionLocal, engine
+
+from backend.testing.test_database import Testengine, TestSessionLocal
 from backend.private_logic.hashing import algorithm, hash_salt, hashed_answer_1, hashed_answer_2, hashed_answer_3 # type: ignore
 from backend.private_logic.jwt import TOKEN_LIFESPAN
+
 from backend.security.jwt_tokens import jwt_validation
 from typing import Annotated
 
 #----Database and Session Setup----
-@pytest.fixture(autouse=True)
-def database_setup():
-    Base.metadata.drop_all(bind=Testengine)
-    Base.metadata.create_all(bind=Testengine)
-    session = TestSessionLocal()
-    try:
-        admin_role, user_role = role_for_setup()
-        session.add_all([admin_role, user_role])
-        session.commit()
-    except Exception as e:
-        log_info_test_space(current_function, e)
-    yield
-    session.close()
-    Base.metadata.drop_all(bind=Testengine)
-
 @pytest.fixture
 def db_session():
-    session = TestSessionLocal()
+    connection = Testengine.connect()
+    transaction = connection.begin()
+    session = TestSessionLocal(bind=connection)
+    session.begin_nested()
     try:
         yield session
     finally:
         session.close()
+        transaction.rollback()
+        connection.close()
 
+@pytest.fixture(autouse=True)
+def database_setup(db_session):
+    users = users_credentials_for_setup()
+    roles = roles_for_setup()
+    db_session.add_all(roles)
+    db_session.flush()
+    db_session.add_all(users)
+    db_session.flush()
+    
 
-def role_for_setup() -> list[dict]:
+def roles_for_setup() -> list[dict]:
     admin_role = models.role(
+        role_id = 1,
         name = 'owner',
         description = 'none',
     )
     user_role = models.role(
+        role_id = 2,
         name = 'user',
         description = 'none',
     )
     return admin_role, user_role
         
-
-def user_credential_for_setup() -> list[dict]:
+def users_credentials_for_setup() -> list[dict]:
     """Arguments in users: 
         username, 
         email, 
@@ -58,82 +61,78 @@ def user_credential_for_setup() -> list[dict]:
         role,
     """
     
-    new_user_John: dict[str:str] = {
-        'username': 'Havent seen anything',
-        'email': 'johndoe@mail.com',
-        'password': 'to_be_hashed',
-        'created_at': current_time(),
-        'policy_agreement': True,
-        'lastly_signed_in_on': current_time(),
-        'role': 2,
-    }
-    new_user_Tom: dict[str:str] = {
-            'username': 'tom',
-            'email': 'tomprince@mail.com',
-            'password': '$ome_cr@zy_p@$$',
-            'created_at': current_time(),
-            'policy_agreement': True,
-            'lastly_signed_in_on': current_time(),
-            'role': 2,
-    }
-    new_user_Anna: dict[str:str] = {
-            'username': 'anna321498',
-            'email': 'annacatlover313452@mail.com',
-            'password': 'no!_$ome_cr@zy_p@$$',
-            'created_at': current_time(),
-            'policy_agreement': False,
-            'lastly_signed_in_on': current_time(),
-            'role': 2,
-    }
-    new_user_Max: dict[str:str] = {
-            'username': 'Definitive',
-            'email': 'atheobserverof@mail.com',
-            'password': '1234',
-            'created_at': current_time(),
-            'policy_agreement': True,
-            'lastly_signed_in_on': current_time(),
-            'role': 1,
-    }
+    new_user_John = models.user_login_credentials(
+        username = 'Havent seen anything',
+        email = 'johndoe@mail.com',
+        hashed_password = user_CRUD.hash_password('to_be_hashed', hash_salt),
+        created_at = current_time(),
+        policy_agreement = True,
+        lastly_signed_in_on = current_time(),
+        role = 2,
+    )
+    new_user_Tom = models.user_login_credentials(
+        username = 'tom',
+        email = 'tomprince@mail.com',
+        hashed_password = user_CRUD.hash_password('$ome_cr@zy_p@$$', hash_salt),
+        created_at = current_time(),
+        policy_agreement = True,
+        lastly_signed_in_on = current_time(),
+        role = 2,
+    )
+    new_user_Anna = models.user_login_credentials(
+        username = 'anna321498',
+        email = 'annacatlover313452@mail.com',
+        hashed_password = user_CRUD.hash_password('no!_$ome_cr@zy_p@$$', hash_salt),
+        created_at = current_time(),
+        policy_agreement = True,
+        lastly_signed_in_on = current_time(),
+        role = 2,   
+    )
+    new_user_Max = models.user_login_credentials(
+        username = 'Definitive',
+        email = 'atheobserverof@mail.com',
+        hashed_password = user_CRUD.hash_password('1234', hash_salt),
+        created_at = current_time(),
+        policy_agreement = True,
+        lastly_signed_in_on = current_time(),
+        role = 1,
+    )
     return new_user_John, new_user_Tom, new_user_Anna, new_user_Max
 
 #----Tests----
 def test_is_user_in_database(db_session):
-    #----Add users to the database----
-    test_new_user_register(db_session)
-    #----Check if you can insert the same user twice----
-    for user in user_credential_for_setup():
+    '''This test determines if the above setup is correct'''
+
+    for user in users_credentials_for_setup():
         try:
-            result = user_CRUD.new_user_register(
-                username = user['username'],
-                email = user['email'],
-                password = user['password'],
-                policy_agreement = user['policy_agreement'],
-                role = user['role'],
-                db_session = db_session,
-            )
+            result = db_session.query(
+                models.user_login_credentials.username,
+                models.user_login_credentials.email,
+                models.user_login_credentials.policy_agreement,
+            ).filter(models.user_login_credentials.username == user.username).first()
+            log_info_test_space(current_function, user.username)
         except Exception as e:
             log_info_test_space(current_function, e)
-        if user['policy_agreement']:
-            assert result == True
+        log_info_test_space(current_function, result)
+        if result:
+            assert result is not None
+            assert user.username == result[0]
+            assert user.email == result[1]
+            assert user.policy_agreement == result[2]
         else:
-            assert result == False
+            assert result is None
 
 def test_new_user_register(db_session):
-    users = user_credential_for_setup()
-    
-    for new_user_credentials in users:
-        result = user_CRUD.new_user_register(
-            username = new_user_credentials['username'],
-            email = new_user_credentials['email'],
-            password = new_user_credentials['password'],
-            policy_agreement = new_user_credentials['policy_agreement'],
-            role = new_user_credentials['role'],
-            db_session = db_session,
-        )
-        if new_user_credentials['policy_agreement']:
-            assert result == True
-        elif not new_user_credentials['policy_agreement']:
-            assert result == False
+    '''This test takes user data and puts it into CRUD to register the user into system'''
+
+    register_Emily = user_CRUD.new_user_register(
+        username = 'EmilyMayer',
+        email = 'emilyheartbreaker@mail.to',
+        password = 'my_heart_is_broken',
+        policy_agreement = True,
+        db_session = db_session,
+    )
+    assert register_Emily == True
 
 def test_hashing():
     assert user_CRUD.hash_password('Dog', hash_salt) == hashed_answer_1
@@ -141,27 +140,26 @@ def test_hashing():
     assert user_CRUD.hash_password('Te$t_of$pec!@l_S!gn$', hash_salt) == hashed_answer_3
 
 def test_user_login(db_session):
-    #----Create Users----
-    users = user_credential_for_setup()
-    for user_credentials in users:
-        user_CRUD.new_user_register(
-            username = user_credentials['username'],
-            email = user_credentials['email'],
-            password = user_credentials['password'],
-            policy_agreement = user_credentials['policy_agreement'],
-            role = user_credentials['role'],
-            db_session = db_session
-        )
+    ''' '''
     #----Check Login----
-        result = user_CRUD.user_login(
-            email = user_credentials['email'],
-            hashed_password = user_CRUD.hash_password(user_credentials['password'], hash_salt),
-            db_session = db_session,
+    for user in users_credentials_for_setup():
+        login_result = user_CRUD.user_login(
+            email= user.email,
+            hashed_password= user.hashed_password,
+            db_session= db_session,
         )
-        if user_credentials['policy_agreement']:
-            assert result == True
-        elif not user_credentials['policy_agreement']:
-            assert result == False
+        #----Check if access token was created----
+        if login_result[0] == False:
+            break
+        elif login_result[1] is not None:
+            assert login_result[0] == True
+
+        session_result = db_session.query(
+            models.login_session.id
+        ).filter(models.login_session.access_token == login_result[1]).first()
+
+        assert session_result is not None
+    #----Check Cookie----
 
 def test_user_logout():
     raise NotImplementedError

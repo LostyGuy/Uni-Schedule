@@ -4,7 +4,11 @@ from backend.logging import log_info, current_function
 from backend.private_logic.hashing import algorithm, hash_salt
 from backend.security.jwt_tokens import create_jwt
 
-def new_user_register(username:str, email: str, password:str, policy_agreement: bool, role:int, db_session) -> bool:
+def new_user_register(username: str, email: str, password: str, db_session, policy_agreement: bool = False, role: int = 1) -> bool:
+    '''
+    Makes query and performs INSERT operation to add user to the database.
+    It takes username, email, password, policy_agreement, role, db_session and returns bool value to determine weather operation was a success or not.
+    '''
     if policy_agreement:
         try:
             new_user = models.user_login_credentials(
@@ -33,7 +37,7 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
     
     #----Is Credentials Correct----
     correct_credentials: list[object] = db_session.query(
-        models.user_login_credentials.id,
+        models.user_login_credentials.id_user,
         models.user_login_credentials.email,
         models.user_login_credentials.hashed_password,
     ).filter(
@@ -44,12 +48,13 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
     else:
         login_data: bool =  False
 
+    #!----TO BE REDIRECTED TO user_session.py----
     if login_data:
     #----Create JWT----
-        access_token, payload = create_jwt(correct_credentials.id, issue_endpoint='/login_request', for_endpoint='/loged')
+        access_token, payload = create_jwt(correct_credentials.id_user, issue_endpoint='/login_request', for_endpoint='/loged')
     #----Add User Session Entry----
         login_session = models.login_session(
-            user_id = correct_credentials.id,
+            user_id = correct_credentials.id_user,
             access_token = access_token,
             issued_at = payload['iat'],
             valid_till = payload['exp'],
@@ -65,6 +70,6 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
         except Exception as e:
             db_session.rollback()
             log_info(current_function, e)
-        return True
+        return True, access_token
     else:
         return False
