@@ -34,7 +34,7 @@
     <h2>Phases of Development - TDD</h2>
     <table style="margin-left: auto; margin-right: auto;">
         <th></th>
-        <th>Backend  (CURRENT)</th>
+        <th>Backend</th>
         <th>Web Frontend</th>
         <th>Public Tests</th>
         <th>Mobile App</th>
@@ -54,7 +54,7 @@
         </tr>
         <tr>
             <td>3.</td>
-            <td>Operations on Schedule</td>
+            <td>Operations on Schedule  <br> <b>🔴 (CURRENT)</b></td>
             <td>Final Design</td>
             <td>Final Polishes and Hot Fixes + E2E Tests</td>
             <td>In Progress</td>
