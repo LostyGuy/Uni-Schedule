@@ -108,7 +108,7 @@
 
 <div align='center' class='solved_problems'>
     <h2>Challenges and Solutions</h2>
-    <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. <br> I'll explain what when wrong, why and how I managed to find a solution</h4>
+    <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. <br> I'll explain what went wrong, why and how I managed to find a solution</h4>
     <details open>
         <summary>Mocking database operations</summary>
         <div align="left" style="width: 50%; display: inline-block;">
