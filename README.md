@@ -127,15 +127,16 @@ def db_session():
     finally:
         session.close()
         transaction.rollback()
-        connection.close()                       
+        connection.close()
             </pre>
         </div>
         <div align="left" style="width: 45%; display: inline-block;">
             <h2 align="center">Mocking database operations</h2>
             <h4>
-                At first I used external local Postgresql database for test. But found this solution overcomplicated as I would have to setup these tools on every machine I work on. <br><br> Current solution creates a <b>transaction</b> that stores every query during tests and rollsback every change it made. Tests don't leave marks on the database and doesn't interfere with user trafic
+                At first I used external local Postgresql database for test. But found this solution overcomplicated as I would have to setup these tools on every machine I work on. <br><br> Current solution creates a <b>transaction</b> that stores every query during tests and rolls back every change it made. Tests don't leave marks on the database and don't interfere with user traffic
             </h4>
-            <h5><h3>Traffic in tests</h3>
+            <h3>Traffic in tests</h3>
+            <h4>
                 <ul>
                     <li>Connection to the Database</li>
                     <li>Opening Transaction</li>
@@ -143,7 +144,7 @@ def db_session():
                     <li>Rollback changes no matter the outcome</li>
                     <li>Close Session and Connection</li>
                 </ul>
-            </h5>
+            </h4>
             <br>
         </div>
     </details>
@@ -153,7 +154,7 @@ def db_session():
 
 <div align='center' class='testing'>
     <h2>Yes I Do Include Automatic Tests</h2>
-    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of operations made during tests stays on database.</p>
+    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of operations made during tests stay on database.</p>
 </div>
 
 <hr>
