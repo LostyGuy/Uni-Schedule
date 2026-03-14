@@ -60,7 +60,7 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
             valid_till = payload['exp'],
             issued_from_endpoint = '/user_request',
             valid_for_endpoint = payload['aud'],
-            status = 'active',
+            status = 'Active',
             jwt_id = payload['jti'],
             created_at = str(current_time()),
         )
@@ -72,4 +72,39 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
             log_info(current_function, e)
         return True, access_token
     else:
+        return False
+    
+def user_log_out(db_session, access_token: str = None):
+    ''' '''
+
+    status: list[any] = db_session.query(
+        models.login_session.status,
+        models.login_session.valid_till,
+    ).filter(
+        models.login_session.access_token == access_token,
+    ).order_by(
+        models.login_session.issued_at.desc()
+    ).first()
+
+    log_info(current_function, f'Status is {status[0]}')
+
+    if status[0] == 'Active':
+        try:
+            db_session.query(
+            models.login_session,
+            ).filter_by(
+                access_token = access_token,
+            ).update(
+                {'status': 'Revoked'}
+            )
+            db_session.commit()
+        except Exception as e:
+            log_info('Log Out', e)
+            return False
+        return True
+    elif status[0] == 'Revoked':
+        log_info(current_function, 'Token is already revoked')
+        return False
+    else:
+        log_info(current_function, 'Unexpected Value')
         return False
