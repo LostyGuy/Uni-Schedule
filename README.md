@@ -136,15 +136,13 @@ def db_session():
                 At first I used external local Postgresql database for test. But found this solution overcomplicated as I would have to setup these tools on every machine I work on. <br><br> Current solution creates a <b>transaction</b> that stores every query during tests and rolls back every change it made. Tests don't leave marks on the database and don't interfere with user traffic
             </h4>
             <h3>Traffic in tests</h3>
-            <h4>
-                <ul>
-                    <li>Connection to the Database</li>
-                    <li>Opening Transaction</li>
-                    <li>Test logic</li>
-                    <li>Rollback changes no matter the outcome</li>
-                    <li>Close Session and Connection</li>
-                </ul>
-            </h4>
+            <ul>
+                <li>Connection to the Database</li>
+                <li>Opening Transaction</li>
+                <li>Test logic</li>
+                <li>Rollback changes no matter the outcome</li>
+                <li>Close Session and Connection</li>
+            </ul>
             <br>
         </div>
     </details>
@@ -154,7 +152,7 @@ def db_session():
 
 <div align='center' class='testing'>
     <h2>Yes I Do Include Automatic Tests</h2>
-    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of operations made during tests stay on database.</p>
+    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of the operations made during tests stay on database.</p>
 </div>
 
 <hr>
