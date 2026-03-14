@@ -111,8 +111,10 @@
     <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. <br> I'll explain what went wrong, why and how I managed to find a solution</h4>
     <details open>
         <summary>Mocking database operations</summary>
-        <div align="left" style="width: 50%; display: inline-block;">
-            <pre>
+        <table>
+            <tr>
+                <td>
+                    <pre>
 #----Database and Session Setup----
 @pytest.fixture
 def db_session():
@@ -129,9 +131,9 @@ def db_session():
         transaction.rollback()
         connection.close()
             </pre>
-        </div>
-        <div align="left" style="width: 45%; display: inline-block;">
-            <h2 align="center">Mocking database operations</h2>
+                </td>
+                <td>
+                    <h2 align="center">Mocking database operations</h2>
             <h4>
                 At first I used external local Postgresql database for test. But found this solution overcomplicated as I would have to setup these tools on every machine I work on. <br><br> Current solution creates a <b>transaction</b> that stores every query during tests and rolls back every change it made. Tests don't leave marks on the database and don't interfere with user traffic
             </h4>
@@ -144,7 +146,9 @@ def db_session():
                 <li>Close Session and Connection</li>
             </ul>
             <br>
-        </div>
+                </td>
+            </tr>
+        </table>
     </details>
 </div>
 
