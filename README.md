@@ -16,9 +16,6 @@
         <img style="display: inline;" alt="Static Badge" src="https://img.shields.io/badge/build--blue?style=for-the-badge&logo=nextdotjs&logoColor=%23000000&label=next.js&color=%23000000">
         <img style="display: inline;" alt="Static Badge" src="https://img.shields.io/badge/build--blue?style=for-the-badge&logo=tailwindcss&logoColor=%2306B6D4&label=tailwindcss&color=%2306B6D4">
     </div>
-    <div>
-        <img style="display: inline;" alt="Static Badge" src="https://img.shields.io/coderabbit/prs/github/LostyGuy/Uni-Schedule?utm_source=oss&utm_medium=github&utm_campaign=LostyGuy%2FUni-Schedule&labelColor=171717&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews">
-    </div>
 </div>
 
 <hr>
@@ -31,7 +28,7 @@
 <hr>
 
 <div align='center' class='phases'>
-    <h2>Phases of Development - TDD</h2>
+    <h2>Phases of Development</h2>
     <table style="margin-left: auto; margin-right: auto;">
         <th></th>
         <th>Backend  (CURRENT)</th>
@@ -40,28 +37,28 @@
         <th>Mobile App</th>
         <tr>
             <td>1.</td>
-            <td>Unit Tests</td>
+            <td>RBAC + Personal Data Seciruty</td>
             <td>Functional Design + Connection with Backend</td>
             <td><50 group of people are given up to 6 months of time to for testing purposes</td>
             <td>In Progress</td>
         </tr>
         <tr>
             <td>2.</td>
-            <td>RBAC + Personal Data Security</td>
+            <td>Operations on Schedule</td>
             <td>Dynamic Schedule and responsive display</td>
             <td>Collecting bug reports, feature ideas etc.</td>
             <td>In Progress</td>
         </tr>
         <tr>
             <td>3.</td>
-            <td>Operations on Schedule</td>
+            <td>Securing endpoints + Login with Google account</td>
             <td>Final Design</td>
             <td>Final Polishes and Hot Fixes + E2E Tests</td>
             <td>In Progress</td>
         </tr>
         <tr>
             <td>4.</td>
-            <td>Securing endpoints + Login with Google account</td>
+            <td>Unit Tests</td>
             <td>Integration Tests + Security of Inputs</td>
             <td>Public release of Alpha on Google play and Social Media Announcement</td>
             <td>In Progress</td>
@@ -93,66 +90,27 @@
 
 <div align='center' class='security'>
     <h2>What Security Measures Were Taken</h2>
-    <div align="center" style="width: 50%;">
-        <h4>Anti-DDoS detection system <b>[IN PROGRESS]</b></h4>
-        <h4>Anti-SQL Injection check on every input <b>[IN PROGRESS]</b></h4>
-        <h4>Safe storage of sensible data by hashing them</h4>
-        <h4>Preventing token fraud via numerous identification labels</h4>
-        <h4>Automatic QA tests so the system is always running correctly</h4>
-        <h4>RBAC (Role Based Access Control) Prevents unauthorized access <b>[IN PROGRESS]</b></h4>
-        <h4>Logging suspicious activities, errors, invalid queries and ability to report a bug via form <b>[IN PROGRESS]</b></h4>
-    </div>
-</div>
-
-<hr>
-
-<div align='center' class='solved_problems'>
-    <h2>Challenges and Solutions</h2>
-    <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. <br> I'll explain what went wrong, why and how I managed to find a solution</h4>
-    <details open>
-        <summary>Mocking database operations</summary>
-        <div align="left" style="width: 50%; display: inline-block;">
-            <pre>
-#----Database and Session Setup----
-@pytest.fixture
-def db_session():
-    connection = Testengine.connect()
-    transaction = connection.begin()
-    session = TestSessionLocal(
-        bind=connection
-        )
-    session.begin_nested()
-    try:
-        yield session
-    finally:
-        session.close()
-        transaction.rollback()
-        connection.close()
-            </pre>
-        </div>
-        <div align="left" style="width: 45%; display: inline-block;">
-            <h2 align="center">Mocking database operations</h2>
-            <h4>
-                At first I used external local Postgresql database for test. But found this solution overcomplicated as I would have to setup these tools on every machine I work on. <br><br> Current solution creates a <b>transaction</b> that stores every query during tests and rolls back every change it made. Tests don't leave marks on the database and don't interfere with user traffic
-            </h4>
-            <h3>Traffic in tests</h3>
-            <ul>
-                <li>Connection to the Database</li>
-                <li>Opening Transaction</li>
-                <li>Test logic</li>
-                <li>Rollback changes no matter the outcome</li>
-                <li>Close Session and Connection</li>
-            </ul>
-            <br>
-        </div>
-    </details>
+    <h4>Anti-DDoS detection system</h4>
+    <h4>Anti-SQL Injection check on every input</h4>
+    <h4>Safe storage of sensible data by hashing them</h4>
+    <h4>Preventing token fraud via numerous identification labels</h4>
+    <h4>Automatic QA tests so the system is always running corectlly</h4>
+    <h4>RBAC (Role Based Access Control) Prevents unauthorized access</h4>
+    <h4>Logging suspicious activities, errors, invalid queries and ability to report a bug via form</h4>
 </div>
 
 <hr>
 
 <div align='center' class='testing'>
     <h2>Yes I Do Include Automatic Tests</h2>
-    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of the operations made during tests stay on database.</p>
+    <p>This project includes more than 25 unit tests. They check both endpoints and business logic. <br> My setup mocks database so none of operations made during tests stays on database.</p>
+</div>
+
+<hr>
+
+<div align='center' class='solved_problems'>
+    <h2>Challenges and Solutions</h2>
+    <h4>This Section is dedicated for challenges I run into during creation and maintenance of this app. I'll explain what when wrong, why and how I managed to find a solution</h4>
 </div>
 
 <hr>
