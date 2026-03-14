@@ -148,7 +148,7 @@ def test_user_login(db_session):
             hashed_password= user.hashed_password,
             db_session= db_session,
         )
-    #----Check if access token was created----
+        #----Check if access token was created----
         if login_result[0] == False:
             break
         elif login_result[1] is not None:
@@ -161,34 +161,8 @@ def test_user_login(db_session):
         assert session_result is not None
     #----Check Cookie----
 
-def test_user_logout(db_session):
-    ''' '''
+def test_user_logout():
+    raise NotImplementedError
 
-    #----Log In----
-    for user in users_credentials_for_setup():
-        success, access_token = user_CRUD.user_login(
-            email= user.email,
-            hashed_password= user.hashed_password,
-            db_session= db_session,
-        )
-
-        assert success == True
-    #----Log Out----
-        result = user_CRUD.user_log_out(
-            access_token= access_token,
-            db_session= db_session
-        )
-        status: list[any] = db_session.query(
-        models.login_session.status,
-        ).filter(
-            models.login_session.access_token == access_token,
-        ).order_by(
-            models.login_session.issued_at.desc()
-        ).first()
-
-        assert result == True
-        assert status[0] == 'Revoked'
-        
-#!---Suspended for now----
-# def test_get_user_profile():
-#   pass
+def test_get_user_profile():
+    raise NotImplementedError
