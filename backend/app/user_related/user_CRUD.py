@@ -72,7 +72,7 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
             log_info(current_function, e)
         return True, access_token
     else:
-        return False
+        return False, None
     
 def user_log_out(db_session, access_token: str = None):
     ''' '''

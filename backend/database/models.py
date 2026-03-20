@@ -43,7 +43,7 @@ class user_login_credentials(Base):
 
 class schedule(Base):
     __tablename__ = 'schedule'
-    id: int = Column(
+    id_schedule: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
@@ -58,7 +58,7 @@ class schedule(Base):
     )
     created_by: int = Column(
         Integer,
-        ForeignKey("user_login_credentials.id"),
+        ForeignKey("user_login_credentials.id_user"),
         nullable= False,
     )
     created_at: str = Column(

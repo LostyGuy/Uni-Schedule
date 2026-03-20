@@ -99,7 +99,7 @@ def users_credentials_for_setup() -> list[dict]:
     )
     return new_user_John, new_user_Tom, new_user_Anna, new_user_Max
 
-#----Tests----
+#!----Tests----
 def test_is_user_in_database(db_session):
     '''This test determines if the above setup is correct'''
 
