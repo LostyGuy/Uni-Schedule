@@ -70,7 +70,6 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
         except Exception as e:
             db_session.rollback()
             log_info(current_function, e)
-            return False, None
         return True, access_token
     else:
         return False, None
@@ -78,6 +77,10 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
 def user_log_out(db_session, access_token: str = None):
     ''' '''
 
+    if access_token is None:
+        log_info(current_function, 'access_token is None')
+        raise TypeError
+    
     status: list[any] = db_session.query(
         models.login_session.status,
         models.login_session.valid_till,
@@ -86,32 +89,27 @@ def user_log_out(db_session, access_token: str = None):
     ).order_by(
         models.login_session.issued_at.desc()
     ).first()
-    if status is None:
-        log_info(current_function, 'Status is None', f'Access token suffix "{access_token[-8:]}"')
-    elif type(status[0]) != str:
-        log_info(current_function, f'Incorrect status: {status}')
-        raise Exception
-    else:
-        log_info(current_function, f'Status is {status[0]}')
+    
+    log_info(current_function, f'Status is {status[0]}')
 
-        if status[0] == 'Active':
-            try:
-                db_session.query(
-                models.login_session,
-                ).filter_by(
-                    access_token = access_token,
-                ).update(
-                    {'status': 'Revoked'}
-                )
-                db_session.commit()
-            except Exception as e:
-                db_session.rollback()
-                log_info('Log Out', e)
-                return False
-            return True
-        elif status[0] == 'Revoked':
-            log_info(current_function, 'Token is already revoked')
+    if status[0] == 'Active':
+        try:
+            db_session.query(
+            models.login_session,
+            ).filter_by(
+                access_token = access_token,
+            ).update(
+                {'status': 'Revoked'}
+            )
+            db_session.commit()
+        except Exception as e:
+            db_session.rollback()
+            log_info('Log Out', e)
             return False
-        else:
-            log_info(current_function, 'Unexpected Value')
-            return False
+        return True
+    elif status[0] == 'Revoked':
+        log_info(current_function, 'Token is already revoked')
+        return False
+    else:
+        log_info(current_function, 'Unexpected Value')
+        return False
