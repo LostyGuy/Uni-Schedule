@@ -72,19 +72,23 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
             log_info(current_function, e)
         return True, access_token
     else:
-        return False
+        return False, None
     
 def user_log_out(db_session, access_token: str = None):
     ''' '''
 
-    status: list[any] = db_session.query(
+    if status:= db_session.query(
         models.login_session.status,
         models.login_session.valid_till,
     ).filter(
         models.login_session.access_token == access_token,
     ).order_by(
         models.login_session.issued_at.desc()
-    ).first()
+    ).first() is None:
+        log_info(current_function, 'Status is None', f'Parameters passed: access_token "{access_token}"')
+    elif type(status) != str:
+        log_info(current_function, f'Incorrect status: {status}')
+        raise Exception
 
     log_info(current_function, f'Status is {status[0]}')
 
@@ -99,6 +103,7 @@ def user_log_out(db_session, access_token: str = None):
             )
             db_session.commit()
         except Exception as e:
+            db_session.rollback()
             log_info('Log Out', e)
             return False
         return True
