@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, String, Integer, Float, TIMESTAMP ,Column, ForeignKey
 from sqlalchemy.orm import relationship
-from backend.database.database import Base
+from backend.connection.connection import Base
 from backend.timestamps import current_time
 
 class user_login_credentials(Base):
@@ -68,6 +68,11 @@ class schedule(Base):
     last_update_at: str = Column(
         TIMESTAMP,
         nullable= False,
+    )
+    status: bool = Column(
+        Boolean,
+        nullable= False,
+        default= 'Active'
     )
 
 # TODO: Recurring Events

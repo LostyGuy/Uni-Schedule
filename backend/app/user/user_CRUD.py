@@ -1,4 +1,4 @@
-from backend.database import models
+from backend.connection import models
 from backend.timestamps import current_time
 from backend.logging import log_info, current_function
 from backend.private_logic.hashing import algorithm, hash_salt

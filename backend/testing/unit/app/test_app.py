@@ -1,8 +1,8 @@
 import pytest
 from fastapi.testclient import TestClient
-import backend.app.app as app
-import backend.database.database as database
-import backend.testing.test_database as Testdb
+import backend.app.main as main
+import backend.connection.connection as connection
+import backend.testing.unit.test_database as Testdb
 
 #!----Status Codes----
 #   200 - OK
@@ -14,8 +14,8 @@ import backend.testing.test_database as Testdb
 #----Mock DB Setup----
 @pytest.fixture
 def Client():
-    app.app.dependency_overrides[database.get_db] = Testdb.get_db
-    return TestClient(app.app)
+    main.app.dependency_overrides[connection.get_db] = Testdb.get_db
+    return TestClient(main.app)
 
 #----User Related----
 def test_user_login_request(Client):

@@ -1,12 +1,12 @@
 import pytest
-import backend.app.user_related.user_CRUD as user_CRUD
-import backend.database.models as models
-from backend.database.database import Base
+import backend.app.user.user_CRUD as user_CRUD
+import backend.connection.models as models
+from backend.connection.connection import Base
 from backend.timestamps import current_time
 from backend.logging import log_info_test_space, current_function
 # from backend.database.database import SessionLocal, engine
 
-from backend.testing.test_database import Testengine, TestSessionLocal
+from backend.testing.unit.test_database import Testengine, TestSessionLocal
 from backend.private_logic.hashing import algorithm, hash_salt, hashed_answer_1, hashed_answer_2, hashed_answer_3 # type: ignore
 from backend.private_logic.jwt import TOKEN_LIFESPAN
 
@@ -24,7 +24,7 @@ def db_session():
         yield session
     finally:
         session.close()
-        transaction.rollback()
+        transaction.commit()
         connection.close()
 
 @pytest.fixture(autouse=True)

@@ -1,10 +1,10 @@
 import pytest
-from backend.testing.test_database import Testengine, TestSessionLocal
-from backend.app.schedule_related.schedule_CRUD import create_schedule
-import backend.app.user_related.user_CRUD as user_CRUD
+from backend.testing.unit.test_database import Testengine, TestSessionLocal
+from backend.app.schedule.schedule_CRUD import create_schedule
+import backend.app.user.user_CRUD as user_CRUD
 from backend.timestamps import current_time
 from backend.logging import current_function, log_info_test_space
-import backend.database.models as models
+import backend.connection.models as models
 from backend.private_logic.hashing import hash_salt
 from sqlalchemy import desc
 
@@ -106,6 +106,7 @@ def test_create_schedule(db_session):
     created_schedule = db_session.query(
         models.schedule.title,
         models.schedule.created_by,
+        models.schedule.status,
     ).filter(
         models.schedule.created_by == new_schedule.get('creator'),
     ).order_by(
