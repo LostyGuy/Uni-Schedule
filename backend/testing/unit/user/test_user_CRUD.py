@@ -4,7 +4,6 @@ import backend.connection.models as models
 from backend.connection.connection import Base
 from backend.timestamps import current_time
 from backend.logging import log_info_test_space, current_function
-# from backend.database.database import SessionLocal, engine
 
 from backend.testing.unit.test_database import Testengine, TestSessionLocal
 from backend.private_logic.hashing import algorithm, hash_salt, hashed_answer_1, hashed_answer_2, hashed_answer_3 # type: ignore
@@ -27,77 +26,77 @@ def db_session():
         transaction.commit()
         connection.close()
 
-@pytest.fixture(autouse=True)
-def database_setup(db_session):
-    users = users_credentials_for_setup()
-    roles = roles_for_setup()
-    db_session.add_all(roles)
-    db_session.flush()
-    db_session.add_all(users)
-    db_session.flush()
+# @pytest.fixture(autouse=True)
+# def database_setup(db_session):
+#     users = users_credentials_for_setup()
+#     roles = roles_for_setup()
+#     db_session.add_all(roles)
+#     db_session.flush()
+#     db_session.add_all(users)
+#     db_session.flush()
     
 
-def roles_for_setup() -> list[dict]:
-    admin_role = models.role(
-        role_id = 1,
-        name = 'owner',
-        description = 'none',
-    )
-    user_role = models.role(
-        role_id = 2,
-        name = 'user',
-        description = 'none',
-    )
-    return admin_role, user_role
+# def roles_for_setup() -> list[dict]:
+#     admin_role = models.role(
+#         role_id = 1,
+#         name = 'owner',
+#         description = 'none',
+#     )
+#     user_role = models.role(
+#         role_id = 2,
+#         name = 'user',
+#         description = 'none',
+#     )
+#     return admin_role, user_role
         
-def users_credentials_for_setup() -> list[dict]:
-    """Arguments in users: 
-        username, 
-        email, 
-        password, 
-        created_at, 
-        policy_agreement, 
-        lastly_signed_in_on, 
-        role,
-    """
+# def users_credentials_for_setup() -> list[dict]:
+#     """Arguments in users: 
+#         username, 
+#         email, 
+#         password, 
+#         created_at, 
+#         policy_agreement, 
+#         lastly_signed_in_on, 
+#         role,
+#     """
     
-    new_user_John = models.user_login_credentials(
-        username = 'Havent seen anything',
-        email = 'johndoe@mail.com',
-        hashed_password = user_CRUD.hash_password('to_be_hashed', hash_salt),
-        created_at = current_time(),
-        policy_agreement = True,
-        lastly_signed_in_on = current_time(),
-        role = 2,
-    )
-    new_user_Tom = models.user_login_credentials(
-        username = 'tom',
-        email = 'tomprince@mail.com',
-        hashed_password = user_CRUD.hash_password('$ome_cr@zy_p@$$', hash_salt),
-        created_at = current_time(),
-        policy_agreement = True,
-        lastly_signed_in_on = current_time(),
-        role = 2,
-    )
-    new_user_Anna = models.user_login_credentials(
-        username = 'anna321498',
-        email = 'annacatlover313452@mail.com',
-        hashed_password = user_CRUD.hash_password('no!_$ome_cr@zy_p@$$', hash_salt),
-        created_at = current_time(),
-        policy_agreement = True,
-        lastly_signed_in_on = current_time(),
-        role = 2,   
-    )
-    new_user_Max = models.user_login_credentials(
-        username = 'Definitive',
-        email = 'atheobserverof@mail.com',
-        hashed_password = user_CRUD.hash_password('1234', hash_salt),
-        created_at = current_time(),
-        policy_agreement = True,
-        lastly_signed_in_on = current_time(),
-        role = 1,
-    )
-    return new_user_John, new_user_Tom, new_user_Anna, new_user_Max
+#     new_user_John = models.user_login_credentials(
+#         username = 'Havent seen anything',
+#         email = 'johndoe@mail.com',
+#         hashed_password = user_CRUD.hash_password('to_be_hashed', hash_salt),
+#         created_at = current_time(),
+#         policy_agreement = True,
+#         lastly_signed_in_on = current_time(),
+#         role = 2,
+#     )
+#     new_user_Tom = models.user_login_credentials(
+#         username = 'tom',
+#         email = 'tomprince@mail.com',
+#         hashed_password = user_CRUD.hash_password('$ome_cr@zy_p@$$', hash_salt),
+#         created_at = current_time(),
+#         policy_agreement = True,
+#         lastly_signed_in_on = current_time(),
+#         role = 2,
+#     )
+#     new_user_Anna = models.user_login_credentials(
+#         username = 'anna321498',
+#         email = 'annacatlover313452@mail.com',
+#         hashed_password = user_CRUD.hash_password('no!_$ome_cr@zy_p@$$', hash_salt),
+#         created_at = current_time(),
+#         policy_agreement = True,
+#         lastly_signed_in_on = current_time(),
+#         role = 2,   
+#     )
+#     new_user_Max = models.user_login_credentials(
+#         username = 'Definitive',
+#         email = 'atheobserverof@mail.com',
+#         hashed_password = user_CRUD.hash_password('1234', hash_salt),
+#         created_at = current_time(),
+#         policy_agreement = True,
+#         lastly_signed_in_on = current_time(),
+#         role = 1,
+#     )
+#     return new_user_John, new_user_Tom, new_user_Anna, new_user_Max
 
 #!----Tests----
 def test_is_user_in_database(db_session):
@@ -106,10 +105,10 @@ def test_is_user_in_database(db_session):
     for user in users_credentials_for_setup():
         try:
             result = db_session.query(
-                models.user_login_credentials.username,
-                models.user_login_credentials.email,
-                models.user_login_credentials.policy_agreement,
-            ).filter(models.user_login_credentials.username == user.username).first()
+                models.user.username,
+                models.user.email,
+                models.user.policy_agreement,
+            ).filter(models.user.username == user.username).first()
             log_info_test_space(current_function, user.username)
         except Exception as e:
             log_info_test_space(current_function, e)

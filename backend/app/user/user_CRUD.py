@@ -11,7 +11,7 @@ def new_user_register(username: str, email: str, password: str, db_session, poli
     '''
     if policy_agreement:
         try:
-            new_user = models.user_login_credentials(
+            new_user = models.user(
                 username = username,
                 email = email,
                 hashed_password = hash_password(password, hash_salt),
@@ -37,11 +37,11 @@ def user_login(email:str, hashed_password:str, db_session) -> bool:
     
     #----Is Credentials Correct----
     correct_credentials: list[object] = db_session.query(
-        models.user_login_credentials.id_user,
-        models.user_login_credentials.email,
-        models.user_login_credentials.hashed_password,
+        models.user.id_user,
+        models.user.email,
+        models.user.hashed_password,
     ).filter(
-        models.user_login_credentials.email == email,
+        models.user.email == email,
     ).first()
     if correct_credentials is not None and correct_credentials.email == email and correct_credentials.hashed_password == hashed_password:
         login_data: bool =  True

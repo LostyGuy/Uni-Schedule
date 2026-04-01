@@ -34,12 +34,12 @@ def database_setup(db_session):
     
 
 def roles_for_setup() -> list[dict]:
-    admin_role = models.role(
+    admin_role = models.roles(
         role_id = 1,
         name = 'owner',
         description = 'none',
     )
-    user_role = models.role(
+    user_role = models.roles(
         role_id = 2,
         name = 'user',
         description = 'none',
@@ -57,7 +57,7 @@ def users_credentials_for_setup() -> list[dict]:
         role,
     """
     
-    new_user_John = models.user_login_credentials(
+    new_user_John = models.user(
         username = 'Havent seen anything',
         email = 'johndoe@mail.com',
         hashed_password = user_CRUD.hash_password('to_be_hashed', hash_salt),
@@ -66,7 +66,7 @@ def users_credentials_for_setup() -> list[dict]:
         lastly_signed_in_on = current_time(),
         role = 2,
     )
-    new_user_Tom = models.user_login_credentials(
+    new_user_Tom = models.user(
         username = 'tom',
         email = 'tomprince@mail.com',
         hashed_password = user_CRUD.hash_password('$ome_cr@zy_p@$$', hash_salt),
@@ -85,9 +85,9 @@ def schedule_and_events_for_setup():
 #----Schedules----
 def test_create_schedule(db_session):
     toms_user_id = db_session.query(
-            models.user_login_credentials.id_user,
+            models.user.id_user,
         ).filter(
-            models.user_login_credentials.username == "tom",
+            models.user.username == "tom",
         ).limit(1).first()
     
     new_schedule: dict[str | int] = {
@@ -104,13 +104,13 @@ def test_create_schedule(db_session):
     )
 
     created_schedule = db_session.query(
-        models.schedule.title,
+        models.schedule.name,
         models.schedule.created_by,
         models.schedule.status,
     ).filter(
         models.schedule.created_by == new_schedule.get('creator'),
     ).order_by(
-        desc(models.schedule.id_schedule)
+        desc(models.schedule.scheduleId)
     ).first()
 
     assert result is True

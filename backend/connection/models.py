@@ -3,19 +3,27 @@ from sqlalchemy.orm import relationship
 from backend.connection.connection import Base
 from backend.timestamps import current_time
 
-class user_login_credentials(Base):
-    __tablename__ = 'user_login_credentials'
-    id_user: int = Column(
+class user(Base):
+    __tablename__ = 'user'
+    userId: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
         autoincrement= True,
     )
-    email: str = Column(
+    username: str = Column(
         String,
         nullable= False,
     )
-    username: str = Column(
+    name: str = Column(
+        String,
+        nullable= False,
+    )
+    surname: str = Column(
+        String,
+        nullable= False,
+    )
+    email: str = Column(
         String,
         nullable= False,
     )
@@ -23,38 +31,47 @@ class user_login_credentials(Base):
         String,
         nullable= False,
     )
+    roleId: int = Column(
+        Integer,
+        ForeignKey("roles.roleId"),
+        nullable= False,
+    )
+    is_active: bool = Column(
+        Boolean,
+        nullable= True,
+    )
+    last_active: TIMESTAMP = Column(
+        TIMESTAMP,
+        nullable= True,
+    )
     created_at: TIMESTAMP = Column(
         TIMESTAMP,
         nullable= False,
     )
-    policy_agreement: bool = Column(
-        Boolean,
-        nullable= False,
-    )
-    lastly_signed_in_on: TIMESTAMP = Column(
-        TIMESTAMP,
-        nullable= False,
-    )
-    role: int = Column(
-        Integer,
-        ForeignKey("role.role_id"),
-        nullable= False,
-    )
-
+    
 class schedule(Base):
     __tablename__ = 'schedule'
-    id_schedule: int = Column(
+    scheduleId: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
         autoincrement= True,
     )
-    title: String = Column(
+    name: String = Column(
         String,
         nullable= False,
     )
     description: str = Column(
         String,
+    )
+    status: bool = Column(
+        Boolean,
+        nullable= False,
+        default= 'Active'
+    )
+    groupId: int = Column(
+        Integer,
+        nullable= True,
     )
     created_by: int = Column(
         Integer,
@@ -65,20 +82,15 @@ class schedule(Base):
         TIMESTAMP,
         nullable= False,
     )
-    last_update_at: str = Column(
+    updated_at: str = Column(
         TIMESTAMP,
         nullable= False,
     )
-    status: bool = Column(
-        Boolean,
-        nullable= False,
-        default= 'Active'
-    )
-
+    
 # TODO: Recurring Events
-class event(Base):
-    __tablename__ = 'event'
-    id: int = Column(
+class events(Base):
+    __tablename__ = 'events'
+    eventid: int = Column(
         Integer,
         primary_key= True,
         nullable= False,
@@ -238,8 +250,8 @@ class color(Base):
         nullable= False,
     )
 
-class role(Base):
-    __tablename__ = 'role'
+class roles(Base):
+    __tablename__ = 'roles'
     role_id: int = Column(
         Integer,
         primary_key= True,
