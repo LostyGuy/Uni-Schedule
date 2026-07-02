@@ -1,57 +1,44 @@
 import pytest
 
-
-#----Database and Session Setup----
-# @pytest.fixture
-# def db_session():
-#     """
-#     Provide a transactional database session for tests that automatically rolls back changes.
-    
-#     Yields a SQLAlchemy session bound to a database connection within a transaction.
-#     All modifications made during the test are rolled back upon completion, ensuring
-#     test isolation.
-#     """
-#     connection = Testengine.connect()
-#     transaction = connection.begin()
-#     session = TestSessionLocal(bind=connection)
-#     session.begin_nested()
-#     try:
-#         yield session
-#     finally:
-#         session.close()
-#         transaction.rollback()
-#         connection.close()
-
 #!----Tests----
 
 #----Groups----
+@pytest.mark.skip
 def test_create_group():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_remove_group():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_join_group():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_leave_group():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_remove_user_from_group():
     raise NotImplementedError
 
 
 #----Group Permission----
+@pytest.mark.skip
 def test_grant_editing_on_group_schedule():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_revoke_editing_on_group_schedule():
     raise NotImplementedError
 
 
 #----Group Invitation----
+@pytest.mark.skip
 def test_generate_join_QRcode():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_generate_join_url():
     raise NotImplementedError

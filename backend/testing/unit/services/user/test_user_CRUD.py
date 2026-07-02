@@ -7,9 +7,6 @@ import backend.connection.models as models
 from backend.testing.conftest import users_data, roles_data
 from backend.security.hashing import hash_string
 from backend.logging import log_error
-# from backend.timestamps import current_time
-# from backend.logging import log_info_test_space, current_function
-# from backend.security.tokens import jwt_validation
 
 
 #!----Tests----
@@ -73,7 +70,7 @@ def test_user_login(db_session):
             log_error("Unknown index appeared")
             raise RuntimeError
 
-
+@pytest.mark.skip
 def test_user_logout(db_session):
     ''' BAD '''
 

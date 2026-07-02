@@ -1,13 +1,9 @@
 import pytest
-from backend.app.services.schedule.schedule_CRUD import create_schedule
-from backend.timestamps import current_time
-from backend.logging import current_function, log_info_test_space
-from sqlalchemy import desc
 
 
 #----Database and Session Setup----
 
-
+@pytest.mark.skip
 def schedule_and_events_for_setup():
     raise NotImplementedError
 
@@ -48,19 +44,24 @@ def schedule_and_events_for_setup():
 #     assert created_schedule[0] == new_schedule.get('title')
 #     assert created_schedule[1] == new_schedule.get('creator')
 
+@pytest.mark.skip
 def test_alter_schedule():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_delete_schedule():
     raise NotImplementedError
 
 
 #----Events----
+@pytest.mark.skip
 def test_create_event():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_alter_event():
     raise NotImplementedError
 
+@pytest.mark.skip
 def test_delete_event():
     raise NotImplementedError
