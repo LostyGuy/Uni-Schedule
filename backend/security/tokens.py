@@ -110,7 +110,7 @@ def create_access_token(user_id: int) -> str:
         "iat": current_time(),
         "exp": current_time() + ACCESS_LIFESPAN,
     }
-    # WHY IS THIS SO LOOONG => jwt.jwt.JWT.encode
+    
     return jwt.encode(
         payload, 
         SECRET_KEY, 

@@ -1,12 +1,6 @@
 import pytest
 
 
-#----Database and Session Setup----
-
-@pytest.mark.skip
-def schedule_and_events_for_setup():
-    raise NotImplementedError
-
 #!----Tests----
 
 #----Schedules----
@@ -50,18 +44,4 @@ def test_alter_schedule():
 
 @pytest.mark.skip
 def test_delete_schedule():
-    raise NotImplementedError
-
-
-#----Events----
-@pytest.mark.skip
-def test_create_event():
-    raise NotImplementedError
-
-@pytest.mark.skip
-def test_alter_event():
-    raise NotImplementedError
-
-@pytest.mark.skip
-def test_delete_event():
     raise NotImplementedError

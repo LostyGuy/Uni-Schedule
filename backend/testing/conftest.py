@@ -69,23 +69,25 @@ def users_data() -> list[dict]:
         A tuple of two user model instances with test credentials and hashed passwords.
     """
     new_user_John = models.users.User(
-        name = 'John',
-        surname = 'Doe',
-        username = 'Havent seen anything',
-        email = 'johndoe@mail.com',
-        hashed_password = hash_string('to_be_hashed'),
-        role_id = 2,
-        policy_agreement = True,
+        user_id= 1,
+        name= 'John',
+        surname= 'Doe',
+        username= 'Havent seen anything',
+        email= 'johndoe@mail.com',
+        hashed_password= hash_string('to_be_hashed'),
+        role_id= 2,
+        policy_agreement= True,
         
     )
     new_user_Tom = models.users.User(
-        name = 'Tom',
-        surname = 'Prince',
-        username = 'tom',
-        email = 'tomprince@mail.com',
-        hashed_password = hash_string('$ome_cr@zy_p@$$'),
-        role_id = 2,
-        policy_agreement = True,
+        user_id= 2,
+        name= 'Tom',
+        surname= 'Prince',
+        username= 'tom',
+        email= 'tomprince@mail.com',
+        hashed_password= hash_string('$ome_cr@zy_p@$$'),
+        role_id= 2,
+        policy_agreement= True,
     )
     return [new_user_John, new_user_Tom]
 
@@ -100,17 +102,17 @@ def roles_data() -> list[dict]:
     	tuple: A tuple containing two models.roles objects (owner_role, user_role)
     """
     admin_role = models.auth.Role(
-        role_id = 1,
-        name = 'owner',
-        description = 'none',
-        can_manage_events = True,
-        can_invite_members = True,
+        role_id= 1,
+        name= 'owner',
+        description= 'none',
+        can_manage_events= True,
+        can_invite_members= True,
     )
     user_role = models.auth.Role(
-        role_id = 2,
-        name = 'user',
-        description = 'none',
-        can_manage_events = False,
-        can_invite_members = False,
+        role_id= 2,
+        name= 'user',
+        description= 'none',
+        can_manage_events= False,
+        can_invite_members= False,
     )
     return [admin_role, user_role]

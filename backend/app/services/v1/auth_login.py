@@ -3,6 +3,7 @@ import os
 import backend.connection.models as models
 import backend.security.tokens as tokens
 from backend.security.hashing import hash_string
+from sqlalchemy import select, update
 
 
 def user_login(email:str, password:str, device_name: str, ip_address: str, db_session) -> str:
@@ -21,6 +22,7 @@ def user_login(email:str, password:str, device_name: str, ip_address: str, db_se
             models.User.hashed_password == hash_string(password)
         ).first()
     except Exception:
+        #TODO:
         #---- Get most possible errors and show them to user in a friendly way ----#
         return {
             "access_token": None,
@@ -56,8 +58,47 @@ def user_login(email:str, password:str, device_name: str, ip_address: str, db_se
         }
     
     
-def user_log_out(db_session, access_token: str = None):
+def user_log_out(db_session, raw_token: str = None) -> bool:
     ''' '''
+
+    if not raw_token:
+        return False
+    #----If token is in DB----
+    stmt = select(
+            models.RefreshToken
+            ).where(
+                models.RefreshToken.token_hash == hash_string(raw_token)
+            )
+        
+    try:
+        result = db_session.scalars(stmt).one_or_none()
+        db_session.execute(
+            update(
+                models.RefreshToken,
+            ).where(
+                models.RefreshToken.user_session_id == result.user_session_id,
+            ).values(
+                is_revoked= True,
+            )
+        )
+        db_session.commit()
+
+    except Exception:
+        #TODO
+        ...
+        return False
+    return True
+        
+
+
+
+
+
+
+
+
+
+
 
 
 
