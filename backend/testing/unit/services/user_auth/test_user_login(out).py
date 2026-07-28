@@ -28,7 +28,7 @@ def test_user_login(db_session):
             "password": "heheNOPE1",
             "device_name": "windows11",
             "ip_address": "255.255.255.255",
-        } #!---- User Do NOT Exists ----
+        } #!---- User Does NOT Exist ----
     ]
 
     for index, user in enumerate(user_credentials):
@@ -58,9 +58,18 @@ def test_user_login(db_session):
 
 def test_user_logout(db_session):
     '''  '''
+    user_id = db_session.scalar(
+        select(
+            models.User.user_id,
+        ).where(
+            models.User.email == "johndoe@mail.com",
+        )
+    )
+
+    assert user_id is not None
 
     raw_token = create_refresh_token(
-        user_id= 1, #---- John Doe — seeded in conftest.users_data() ----
+        user_id= user_id,
         device_name= "testOS",
         ip_address= "255.255.255.254",
         db_session= db_session,

@@ -69,7 +69,6 @@ def users_data() -> list[dict]:
         A tuple of two user model instances with test credentials and hashed passwords.
     """
     new_user_John = models.users.User(
-        user_id= 1,
         name= 'John',
         surname= 'Doe',
         username= 'Havent seen anything',
@@ -80,7 +79,6 @@ def users_data() -> list[dict]:
         
     )
     new_user_Tom = models.users.User(
-        user_id= 2,
         name= 'Tom',
         surname= 'Prince',
         username= 'tom',
