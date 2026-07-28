@@ -6,7 +6,7 @@ from backend.security.hashing import hash_string
 from sqlalchemy import select, update
 
 
-def user_login(email:str, password:str, device_name: str, ip_address: str, db_session) -> str:
+def user_login(email:str, password:str, device_name: str, ip_address: str, db_session) -> dict[str, str | None]:
     """
     Authenticates a user by email and hashed password, and creates a login session on successful verification.
     
@@ -46,8 +46,8 @@ def user_login(email:str, password:str, device_name: str, ip_address: str, db_se
             }
 
         return {
-            "access_token": client_access_token,
-            "refresh_token": raw_refresh_token,
+            "access_token": None,
+            "refresh_token": None,
         }
     
     else:
@@ -58,7 +58,7 @@ def user_login(email:str, password:str, device_name: str, ip_address: str, db_se
         }
     
     
-def user_log_out(db_session, raw_token: str = None) -> bool:
+def user_log_out(db_session, raw_token: str | None = None) -> bool:
     ''' '''
 
     if not raw_token:

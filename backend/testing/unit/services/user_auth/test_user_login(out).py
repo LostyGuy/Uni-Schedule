@@ -35,10 +35,10 @@ def test_user_login(db_session):
 
         try:
             token = v1.user_login(
-                email= user.get("email"),
-                password= user.get("password"),
-                device_name= user.get("device_name"),
-                ip_address= user.get("ip_address"),
+                email= user["email"],
+                password= user["password"],
+                device_name= user["device_name"],
+                ip_address= user["ip_address"],
                 db_session= db_session,
             )
         except Exception as e:
