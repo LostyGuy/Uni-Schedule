@@ -1,14 +1,14 @@
 import os
 
 import pytest
+from sqlalchemy import select
 
 import backend.app.services.v1 as v1
 import backend.connection.models as models
-from backend.testing.conftest import users_data
+from backend.testing.conftest import MIXED_USERS
 from backend.logging import log_error
 from backend.security.tokens import create_refresh_token
 from backend.security.hashing import hash_string
-from sqlalchemy import select
 
 
 def test_user_login(db_session):
@@ -16,22 +16,22 @@ def test_user_login(db_session):
     Verify that user login authentication creates an access token and corresponding login session record.
     """
     
-    user_credentials = [
-            {
-            "email": "johndoe@mail.com",
-            "password": "to_be_hashed",
-            "device_name": "windows10",
-            "ip_address": "255.255.255.254",
-        }, #!---- User Exists ----
-            {
-            "email": "john.lemon@gmail.com",
-            "password": "heheNOPE1",
-            "device_name": "windows11",
-            "ip_address": "255.255.255.255",
-        } #!---- User Does NOT Exist ----
-    ]
+    # user_credentials = [
+    #         {
+    #         "email": "johndoe@mail.com",
+    #         "password": "to_be_hashed",
+    #         "device_name": "windows10",
+    #         "ip_address": "255.255.255.254",
+    #     }, #!---- User Exists ----
+    #         {
+    #         "email": "john.lemon@gmail.com",
+    #         "password": "heheNOPE1",
+    #         "device_name": "windows11",
+    #         "ip_address": "255.255.255.255",
+    #     } #!---- User Does NOT Exist ----
+    # ]
 
-    for index, user in enumerate(user_credentials):
+    for index, user in enumerate(MIXED_USERS):
 
         try:
             token = v1.user_login(

@@ -8,49 +8,45 @@ from sqlalchemy import select, update
 import backend.connection.models as models 
 from backend.security.hashing import hash_string
 from backend.timestamps import current_time
-from backend.logging import current_function, log_info
+from backend.logging import current_function, log_info, log_error
+from backend.config import get_environmental_variables
 
 REFRESH_LIFESPAN = timedelta(days=30)
 ACCESS_LIFESPAN = timedelta(minutes=15)
 
-def _get_environmental_variables(name: str) -> str:
-    
-    value = os.getenv(name)
-    if not value:
-        raise RuntimeError(f"Required environmental value '{name}' is not set")
-    
-    return value
+SECRET_KEY = get_environmental_variables("SECRET_KEY")
+ALGORITHM = get_environmental_variables("ALGORITHM")
 
-
-SECRET_KEY = _get_environmental_variables("SECRET_KEY")
-ALGORITHM = _get_environmental_variables("ALGORITHM")
-
-def create_refresh_token(user_id:int, device_name:str, ip_address: str, db_session) -> str:
+def create_refresh_token(user_id:int, device_name:str, ip_address: str, db_session) -> str | None:
     
     raw_token: str = secrets.token_urlsafe(64)
     token_hash: str = hash_string(raw_token)
     
-    token = models.RefreshToken(
-        user_id = user_id,
-        token_hash = token_hash,
-        expire_at = str(current_time() + REFRESH_LIFESPAN),
-        device_name = device_name,
-        ip_address = ip_address,
-    )
-    db_session.add(token)
-    db_session.commit()
+    try:
+        token = models.RefreshToken(
+            user_id = user_id,
+            token_hash = token_hash,
+            expire_at = str(current_time() + REFRESH_LIFESPAN),
+            device_name = device_name,
+            ip_address = ip_address,
+        )
+        db_session.add(token)
+        db_session.commit()
+    except Exception as e:
+        log_error("Create_Refresh_Token: ", e)
+        return None
     
     return raw_token
     
 
-def update_refresh_token(raw_token: str, db_session) -> str:
+def update_refresh_token(raw_token: str, db_session) -> str | None:
     
     token_hash: str = hash_string(raw_token)
     
     current_token = db_session.execute(
         select(models.RefreshToken).where(
             models.RefreshToken.token_hash == token_hash,
-            models.RefreshToken.expires_at > current_time(), 
+            models.RefreshToken.expire_at > current_time(), 
             models.RefreshToken.is_revoked == False,
         )
     )
@@ -125,7 +121,7 @@ def on_password_change(user_id: int, raw_token: str, db_session):
     current_token = db_session.execute(
         select(models.RefreshToken).where(
             models.RefreshToken.token_hash == token_hash,
-            models.RefreshToken.expires_at > current_time(), 
+            models.RefreshToken.expire_at > current_time(), 
             models.RefreshToken.is_revoked == False,
         )
     )

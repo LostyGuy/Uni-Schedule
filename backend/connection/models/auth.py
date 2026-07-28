@@ -5,31 +5,30 @@ from backend.connection.connection import Base
 class Role(Base):
     __tablename__ = "roles"
 
-    role_id: int = Column(
+    role_id = Column(
         BigInteger,
         primary_key= True,
         nullable= False,
         autoincrement= True,
     )
-    name: str = Column(
+    name = Column(
         String,
         nullable= False,
     )
-    description: str = Column(
+    description = Column(
         String,
         nullable= True,
     )
-    can_manage_events: bool = Column(
+    can_manage_events = Column(
         Boolean,
         nullable= True,
     )
-    can_invite_members: bool = Column(
+    can_invite_members = Column(
         Boolean,
         nullable= True,
     )
-    created_at: DateTime = Column(
+    created_at = Column(
         DateTime(timezone= True),
         nullable= False,
         server_default= func.now(),
     )
-

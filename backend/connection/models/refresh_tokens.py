@@ -37,6 +37,7 @@ class RefreshToken(Base):
     device_name = Column(
         String,
         nullable= True,
+        server_default= text("''"),
     )
     ip_address = Column(
         String,
