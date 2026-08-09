@@ -44,20 +44,23 @@ def test_update_refresh_token(db_session):
         select(
             models.User.user_id
         ).where(
-            models.User.email == "tomprince@mail.com"
+            models.User.email == EXISTING_USERS[0]["email"]
         )
     ).scalar_one()
     
     # place hashed token in DB
-    dummy_token = models.RefreshToken(
-        user_id = Toms_id,
-        token_hash = token_hash,
-        expire_at = current_time() + token.REFRESH_LIFESPAN,
-        ip_address = "10.10.10.10",
-    )
-    db_session.add(dummy_token)
-    db_session.commit()
-    
+    try:
+        dummy_token = models.RefreshToken(
+            user_id = Toms_id,
+            token_hash = token_hash,
+            expire_at = current_time() + token.REFRESH_LIFESPAN,
+            ip_address = "10.10.10.10",
+        )
+        db_session.add(dummy_token)
+        db_session.commit()
+
+    except Exception as e:
+        log_error("Test Update Refresh Token ", e)
     
     new_raw_token = token.update_refresh_token(
         raw_token=old_raw_token,
@@ -85,9 +88,51 @@ def test_update_refresh_token(db_session):
     assert old_raw_token != new_raw_token    
     
 
-@pytest.mark.skip
 def test_revoke_refresh_token(db_session):
-    raise NotImplementedError
+
+    #---- Add Ref. Token Manually ----
+    raw_token: str = secrets.token_urlsafe(64)
+    token_hash: str = hash_string(raw_token)
+
+    Toms_id = db_session.execute(
+            select(
+                models.User.user_id
+            ).where(
+                models.User.email == EXISTING_USERS[0]["email"]
+            )
+        ).scalar_one()
+    try:
+        new_token = models.RefreshToken(
+                user_id = Toms_id,
+                token_hash = token_hash,
+                expire_at = current_time() + token.REFRESH_LIFESPAN,
+                device_name = "device_name",
+                ip_address = "ip_address",
+            )
+        db_session.add(new_token)
+        db_session.commit()
+        
+    except Exception as e:
+        log_error("Test Revoke Refresh Token: ", e)
+
+    token.revoke_refresh_token(
+        raw_token= raw_token,
+        db_session= db_session
+        )
+
+    #---- Assertion ----
+
+    is_revoked = db_session.execute(
+        select(
+            models.RefreshToken.is_revoked
+        ).where(
+            models.RefreshToken.user_id == Toms_id,
+            models.RefreshToken.token_hash == token_hash
+        )
+    ).scalar_one_or_none()
+
+    assert is_revoked == True
+
 
 @pytest.mark.skip
 def test_revoke_all_refresh_tokens(db_session):
