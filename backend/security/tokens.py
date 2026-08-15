@@ -88,15 +88,18 @@ def revoke_refresh_token(raw_token: str, db_session) -> None:
 
 
 def revoke_all_refresh_tokens(user_id: int, db_session) -> None:
-    
-    db_session.execute(
-        update(models.RefreshToken).where(
-            models.RefreshToken.user_id == user_id,
-            models.RefreshToken.is_revoked == False,
-        ).values(is_revoked = True)
-    )
-    
-    db_session.commit()
+
+    try:
+        db_session.execute(
+            update(models.RefreshToken).where(
+                models.RefreshToken.user_id == user_id,
+                models.RefreshToken.is_revoked == False,
+            ).values(is_revoked = True)
+        )
+        
+        db_session.commit()
+    except Exception as e:
+        log_error("revoke_all_refresh_tokens", e)
 
 
 def create_access_token(user_id: int) -> str:

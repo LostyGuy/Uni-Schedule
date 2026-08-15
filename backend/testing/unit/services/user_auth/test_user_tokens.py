@@ -134,9 +134,56 @@ def test_revoke_refresh_token(db_session):
     assert is_revoked == True
 
 
-@pytest.mark.skip
+
 def test_revoke_all_refresh_tokens(db_session):
-    raise NotImplementedError
+
+    max_iter: int = 4
+ 
+    for iter in range(0, max_iter + 1):
+    #---- Add Ref. Token Manually ----
+        raw_token: str = secrets.token_urlsafe(64)
+        token_hash: str = hash_string(raw_token)
+        
+        Toms_id = db_session.execute(
+            select(
+                models.User.user_id
+            ).where(
+                models.User.email == EXISTING_USERS[0]["email"]
+            )
+        ).scalar_one()
+        try:
+            new_token = models.RefreshToken(
+                    user_id = Toms_id,
+                    token_hash = token_hash,
+                    expire_at = current_time() + token.REFRESH_LIFESPAN,
+                    device_name = "device_name",
+                    ip_address = "ip_address",
+            )
+            db_session.add(new_token)
+            db_session.commit()
+            
+        except Exception as e:
+            log_error("Test Revoke Refresh Token: ", e)
+
+    #---- Execution ----
+    
+    token.revoke_all_refresh_tokens(
+        user_id= Toms_id,
+        db_session= db_session
+    )
+    
+    #---- Assertion ----
+
+    are_revoked = db_session.execute(
+        select(
+            models.RefreshToken.is_revoked,
+        ).where(
+            models.RefreshToken.user_id == Toms_id,
+        )
+    ).scalars().all()
+
+    for entry in are_revoked:
+        assert entry == True
 
 @pytest.mark.skip
 def test_create_access_token(db_session):
